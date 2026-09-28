@@ -26,8 +26,8 @@ def guardar_juego():
 
 @app.route('/eliminar_juego', methods=['POST'])
 def eliminar_juego():
+    id = request.form['id']
     controlador_juegos.eliminar_juego(id)
-    request.form['id']
 
     return redirect('/juegos')
 
