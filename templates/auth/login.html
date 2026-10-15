@@ -1,0 +1,60 @@
+{% extends "maestra.html" %}
+
+{% block contenido %}
+<section class="section">
+    <div class="container" style="max-width: 450px;">
+        <h1 class="title has-text-centered">Iniciar sesión</h1>
+        <p class="subtitle has-text-centered">
+            Ingresa para administrar tus videojuegos
+        </p>
+
+        {% for mensaje in get_flashed_messages() %}
+            <div class="notification is-info">
+                {{ mensaje }}
+            </div>
+        {% endfor %}
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="field">
+                {{ form.username.label(class="label") }}
+                <div class="control">
+                    {{ form.username(class="input", placeholder="Nombre de usuario") }}
+                </div>
+                {% for error in form.username.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="field">
+                {{ form.password.label(class="label") }}
+                <div class="control">
+                    {{ form.password(class="input", placeholder="Contraseña") }}
+                </div>
+                {% for error in form.password.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="field">
+                <label class="checkbox">
+                    {{ form.remember_me() }}
+                    Recordarme
+                </label>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    {{ form.submit(class="button is-primary is-fullwidth") }}
+                </div>
+            </div>
+        </form>
+
+        <p class="has-text-centered mt-4">
+            ¿No tienes cuenta?
+            <a href="{{ url_for('auth.register') }}">Regístrate aquí</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -11,40 +11,52 @@
             {% endblock %}
         </title>
 
-        <link 
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"
         >
-
     </head>
+
     <body>
         <nav class="navbar is-warning" role="navigation">
-
-        <div class="navbar-brand">
-
-            <a href="{{ url_for('juegos') }}" class="navbar-item">
-                CRUD Juegos
-            </a>
-
-        </div>
-
-        <div class="navbar-menu">
-
-            <div class="navbar-start">
-
-                <a class="navbar-item" href="{{ url_for('juegos') }}">
-                    Juegos
+            <div class="navbar-brand">
+                <a href="{{ url_for('juegos') }}" class="navbar-item">
+                    CRUD Juegos
                 </a>
-
             </div>
 
-        </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    {% if current_user.is_authenticated %}
+                        <a class="navbar-item" href="{{ url_for('juegos') }}">
+                            Juegos
+                        </a>
+                    {% endif %}
+                </div>
 
-    </nav>
+                <div class="navbar-end">
+                    {% if current_user.is_authenticated %}
+                        <div class="navbar-item">
+                            Hola, {{ current_user.username }}
+                        </div>
 
+                        <a class="navbar-item" href="{{ url_for('auth.logout') }}">
+                            Cerrar sesión
+                        </a>
+                    {% else %}
+                        <a class="navbar-item" href="{{ url_for('auth.login') }}">
+                            Ingresar
+                        </a>
 
-    {% block contenido %}
+                        <a class="navbar-item" href="{{ url_for('auth.register') }}">
+                            Registrarse
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
 
-    {% endblock %}
+        {% block contenido %}
+        {% endblock %}
     </body>
 </html>
