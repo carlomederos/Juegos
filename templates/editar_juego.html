@@ -24,7 +24,7 @@ Editar juego
                 <input
                     type="hidden"
                     name="id"
-                    value="{{ juego[0] }}"
+                    value="{{ juego.id }}"
                 >
 
                 <label for="nombre">
@@ -32,7 +32,7 @@ Editar juego
                 </label>
 
                 <input
-                    value="{{ juego[1] }}"
+                    value="{{ juego.nombre }}"
                     required
                     type="text"
                     class="input"
@@ -46,7 +46,7 @@ Editar juego
                 </label>
 
                 <input
-                    value="{{ juego[2] }}"
+                    value="{{ juego.descripcion }}"
                     required
                     type="text"
                     class="input"
@@ -60,7 +60,7 @@ Editar juego
                 </label>
 
                 <input
-                    value="{{ juego[3] }}"
+                    value="{{ juego.precio }}"
                     required
                     type="number"
                     class="input"

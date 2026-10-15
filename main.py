@@ -1,12 +1,19 @@
 from flask import Flask, render_template, request, redirect
-import controlador_juegos
+import controllers
+from extensions import db
+from models import Juego
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:carlo2005@localhost/juegos'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
 
 @app.route('/')
 @app.route('/juegos')
 def juegos():
-    juegos = controlador_juegos.obtener_juegos()
+    juegos = controllers.obtener_juegos()
     return render_template('juegos.html', juegos=juegos)
 
 @app.route('/agregar_juego.html')
@@ -19,7 +26,7 @@ def guardar_juego():
     descripcion = request.form['descripcion']
     precio = request.form['precio']
 
-    controlador_juegos.insertar_juego(
+    controllers.insertar_juego(
         nombre, descripcion, precio
         )
     return redirect('/juegos')
@@ -27,13 +34,13 @@ def guardar_juego():
 @app.route('/eliminar_juego', methods=['POST'])
 def eliminar_juego():
     id = request.form['id']
-    controlador_juegos.eliminar_juego(id)
+    controllers.eliminar_juego(id)
 
     return redirect('/juegos')
 
 @app.route("/formulario_editar_juego/<int:id>")
 def editar_juego(id):
-    juego = controlador_juegos.obtener_juego_por_id(id)
+    juego = controllers.obtener_juego_por_id(id)
 
     return render_template(
         'editar_juego.html', 
@@ -47,7 +54,7 @@ def actualizar_juego():
     descripcion = request.form['descripcion']
     precio = request.form['precio']
 
-    controlador_juegos.actualizar_juego(
+    controllers.actualizar_juego(
         nombre, 
         descripcion, 
         precio, 

@@ -42,21 +42,21 @@ Juegos
                     <tr>
 
                         <td>
-                            {{ juego[1] }}
+                            {{ juego.nombre }}
                         </td>
 
                         <td>
-                            {{ juego[2] }}
+                            {{ juego.descripcion }}
                         </td>
 
                         <td>
-                            {{ juego[3] }}
+                            {{ juego.precio }}
                         </td>
 
                         <td>
 
                             <a
-                                href="{{ url_for('editar_juego', id=juego[0]) }}"
+                                href="{{ url_for('editar_juego', id=juego.id) }}"
                                 class="button is-info"
                             >
                                 Editar
@@ -74,7 +74,7 @@ Juegos
                                 <input
                                     type="hidden"
                                     name="id"
-                                    value="{{ juego[0] }}"
+                                    value="{{ juego.id }}"
                                 >
 
                                 <button class="button is-danger">
