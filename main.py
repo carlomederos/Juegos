@@ -4,8 +4,11 @@ from extensions import db, login_manager
 from models import Juego
 import controllers
 from auth import auth
+from api import api_bp
 
 app = Flask(__name__)
+
+app.register_blueprint(api_bp, url_prefix='/api')
 
 app.config['SECRET_KEY'] = '7eb18fe65189d94ac4494ccd1a76178ba01ed27585bcd48aac48dd33d8d73328'
 

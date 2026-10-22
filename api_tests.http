@@ -1,0 +1,8 @@
+POST  http://127.0.0.1:8000/api/juegos
+Content-Type: application/json
+
+{
+    "nombre": "",
+    "descripcion": "Prueba de validación",
+    "precio": 99.99
+}
