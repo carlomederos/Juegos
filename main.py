@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, redirect
+import json
+from flask import Flask, render_template, request, redirect, jsonify, abort
+from werkzeug.exceptions import HTTPException
+import logging
+from logging.handlers import RotatingFileHandler
 from flask_login import login_required
 from extensions import db, login_manager
 from models import Juego
@@ -7,6 +11,23 @@ from auth import auth
 from api import api_bp
 
 app = Flask(__name__)
+
+archivo_log = RotatingFileHandler(
+    'errors.log',
+    maxBytes=10240,
+    backupCount=3,
+    encoding='utf-8'
+)
+
+archivo_log.setLevel(logging.ERROR)
+
+archivo_log.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[%(pathname)s:%(lineno)d]'
+))
+
+app.logger.addHandler(archivo_log)
+app.logger.setLevel(logging.ERROR)
 
 app.register_blueprint(api_bp, url_prefix='/api')
 
@@ -23,7 +44,69 @@ login_manager.session_protection = 'strong'
 
 app.register_blueprint(auth, url_prefix='/auth')
 
+def responder_error(error, plantilla=None):
+    if request.path.startswith('/api/'):
+        respuesta = error.get_response()
+        respuesta.data = json.dumps({
+            'codigo': error.code,
+            'error': error.name,
+            'mensaje': error.description
+        })
+        respuesta.content_type = 'application/json'
+        return respuesta
+
+    if plantilla:
+        return render_template(plantilla), error.code
+
+    return error
+
+@app.errorhandler(400)
+def error_400(error):
+    return responder_error(error, '400.html')
+
+@app.errorhandler(404)
+def error_404(error):
+    return responder_error(error, '404.html')
+
+@app.errorhandler(405)
+def error_405(error):
+    return responder_error(error, '405.html')
+
+@app.errorhandler(500)
+def error_500(error):
+    excepcion = getattr(error, 'original_exception', None)
+
+    if excepcion:
+        app.logger.error(
+            'Excepción no controlada: %s',
+            excepcion,
+            exc_info=(
+                type(excepcion),
+                excepcion,
+                excepcion.__traceback__
+            )
+        )
+    else:
+        app.logger.error('Error interno del servidor: %s', error)
+
+    return responder_error(error, '500.html')
+
+@app.errorhandler(HTTPException)
+def error_http_generico(error):
+    if request.path.startswith('/api/'):
+        respuesta = error.get_response()
+        respuesta.data = json.dumps({
+            'codigo': error.code,
+            'error': error.name,
+            'mensaje': error.description
+        })
+        respuesta.content_type = 'application/json'
+        return respuesta
+
+    return error
+
 @app.route('/')
+
 @app.route('/juegos')
 @login_required
 def juegos():
@@ -79,8 +162,18 @@ def actualizar_juego():
         precio, 
         id
         )
+
+@app.route('/prueba-400')
+def prueba_400():
+    abort(400, description='Faltan datos en la solicitud')
+
+@app.route('/prueba-500')
+def prueba_500():
+    resultado = 1 / 0
+    return str(resultado)
+
     
     return redirect('/juegos')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=False, port=8000)

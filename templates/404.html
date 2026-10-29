@@ -1,0 +1,23 @@
+{% extends "maestra.html" %}
+
+{% block titulo %}
+Página no encontrada (404)
+{% endblock %}
+
+{% block contenido %}
+<section class="section">
+    <div class="container">
+        <div class="notification is-danger is-light">
+            <h1 class="title">404 - Página no encontrada</h1>
+            <p>
+                La página que buscas no existe o la dirección
+                que escribiste es incorrecta.
+            </p>
+
+            <a href="{{ url_for('juegos') }}" class="button is-danger mt-4">
+                Volver a videojuegos
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

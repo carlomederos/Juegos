@@ -1,0 +1,23 @@
+{% extends "maestra.html" %}
+
+{% block titulo %}
+Error interno del servidor (500)
+{% endblock %}
+
+{% block contenido %}
+<section class="section">
+    <div class="container">
+        <div class="notification is-danger is-light">
+            <h1 class="title">500 - Error interno del servidor</h1>
+            <p>
+                Ocurrió un problema inesperado al procesar tu solicitud,
+                estamos trabajando para solucionarlo.
+            </p>
+
+            <a href="{{ url_for('juegos') }}" class="button is-danger mt-4">
+                Volver a videojuegos
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
