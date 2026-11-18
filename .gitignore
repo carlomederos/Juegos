@@ -1,3 +1,7 @@
 venv/
 __pycache__/
 *.pyc
+errors.log*
+.coverage
+coverage.xml
+.pytest_cache/
