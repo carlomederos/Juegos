@@ -1,3 +1,4 @@
+import os
 import json
 from flask import Flask, render_template, request, redirect, jsonify, abort
 from werkzeug.exceptions import HTTPException
@@ -33,7 +34,7 @@ app.register_blueprint(api_bp, url_prefix='/api')
 
 app.config['SECRET_KEY'] = '7eb18fe65189d94ac4494ccd1a76178ba01ed27585bcd48aac48dd33d8d73328'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:carlo2005@localhost/juegos'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'mysql+pymysql://root:carlo2005@localhost/juegos')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
